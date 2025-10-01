@@ -1,15 +1,28 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import TaskForm from "./components/TaskForm.vue";
-import type { Task } from "./types";
+import type { Task, TaskFilter } from "./types";
 import TaskList from "./components/TaskList.vue";
+import FilterButton from "./components/FilterButton.vue";
 
 const message = ref("To Vued");
 const tasksList = ref<Task[]>([]);
+const filter = ref<TaskFilter>("all");
 
 const tasksCompleted = computed(
   () => tasksList.value.filter((t) => t.done).length
 );
+
+const filteredTasks = computed(() => {
+  switch (filter.value) {
+    case "all":
+      return tasksList.value;
+    case "todo":
+      return tasksList.value.filter((task) => !task.done);
+    case "done":
+      return tasksList.value.filter((task) => task.done);
+  }
+});
 
 function addTask(newTask: string) {
   tasksList.value.push({
@@ -23,6 +36,14 @@ function toggleDone(id: string) {
   const task = tasksList.value.find((t) => t.id === id);
   if (task) task.done = !task.done;
 }
+
+function removeTask(id: string) {
+  tasksList.value = tasksList.value.filter((t) => t.id !== id);
+}
+
+function setFilter(newFilter: TaskFilter) {
+  filter.value = newFilter;
+}
 </script>
 
 <template>
@@ -33,13 +54,45 @@ function toggleDone(id: string) {
     <h3 v-else>
       {{ tasksCompleted }} / {{ tasksList.length }} Tasks completed.
     </h3>
-    <TaskList :tasksList @toggle-done="toggleDone" />
+    <div v-if="tasksList.length" class="button-container">
+      <FilterButton
+        :current-filter="filter"
+        filter="all"
+        @set-filter="setFilter"
+      />
+      <FilterButton
+        :current-filter="filter"
+        filter="todo"
+        @set-filter="setFilter"
+      />
+      <FilterButton
+        :current-filter="filter"
+        filter="done"
+        @set-filter="setFilter"
+      />
+    </div>
+    <TaskList
+      :tasks-list="filteredTasks"
+      @toggle-done="toggleDone"
+      @remove-task="removeTask"
+    />
   </main>
 </template>
 
-<style scoped>
+<style>
 main {
   max-width: 800px;
   margin: 1rem auto;
+}
+.button-container {
+  display: flex;
+  justify-content: end;
+  gap: 0.5rem;
+}
+
+.button-container button {
+  height: 2rem;
+  display: flex;
+  align-items: center;
 }
 </style>

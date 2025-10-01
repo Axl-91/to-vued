@@ -40,15 +40,4 @@ function handleSubmit() {
 input {
   height: 2rem;
 }
-
-.button-container {
-  display: flex;
-  justify-content: end;
-}
-
-button {
-  height: 2rem;
-  display: flex;
-  align-items: center;
-}
 </style>
