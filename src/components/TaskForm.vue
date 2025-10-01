@@ -22,22 +22,40 @@ function handleSubmit() {
   <form @submit.prevent="handleSubmit" class="task-form">
     <label>
       New Task
-      <input
-        v-model="newTask"
-        name="newTask"
-        :aria-invalid="!!taskError || undefined"
-        @input="taskError = ''"
-      />
+      <div class="input-container">
+        <input
+          v-model="newTask"
+          name="newTask"
+          :aria-invalid="!!taskError || undefined"
+          @input="taskError = ''"
+          placeholder="Add some task..."
+        />
+        <button>Add</button>
+      </div>
       <small v-if="taskError" id="invalid-helper"> {{ taskError }} </small>
     </label>
-    <div class="button-container">
-      <button>Add</button>
-    </div>
   </form>
 </template>
 
 <style scoped>
-input {
+small {
+  padding-left: 0.5rem;
+  color: rgb(192, 1, 1);
+}
+.input-container {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  gap: 5px;
+  margin-bottom: 0;
+}
+.input-container input {
   height: 2rem;
+  margin: 0;
+}
+.input-container button {
+  height: 2rem;
+  display: flex;
+  align-items: center;
 }
 </style>
