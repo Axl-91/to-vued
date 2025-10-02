@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { TaskFilter } from "../types";
+import {motion} from 'motion-v'
 
 const props = defineProps<{
   filter: TaskFilter;
@@ -12,13 +13,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <button
-    class="secondary"
+  <motion.button
+    :whileHover="{scale: 1.10}"
+    :whilePress="{scale: 0.95}"
     :class="{ contrast: props.currentFilter === props.filter }"
     @click="emit('setFilter', props.filter)"
   >
     {{ props.filter }}
-  </button>
+  </motion.button>
 </template>
 
 <style scoped>

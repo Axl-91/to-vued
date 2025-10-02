@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { motion } from "motion-v";
 import { ref } from "vue";
 
 const emit = defineEmits<{
@@ -30,7 +31,11 @@ function handleSubmit() {
           @input="taskError = ''"
           placeholder="Add some task..."
         />
-        <button>Add</button>
+        <motion.button
+          :whilePress="{ scale: 0.95 }"
+        >
+          Add
+        </motion.button>
       </div>
       <small v-if="taskError" id="invalid-helper"> {{ taskError }} </small>
     </label>
