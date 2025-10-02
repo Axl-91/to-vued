@@ -9,6 +9,7 @@ const props = defineProps<{
 const emits = defineEmits<{
   toggleDone: [id: string];
   removeTask: [id: string];
+  editTask: [id: string];
 }>();
 </script>
 
@@ -23,14 +24,39 @@ const emits = defineEmits<{
         />
         <span :class="{ done: task.done }">{{ task.title }}</span>
       </label>
-      <button class="outline" v-on:click="emits('removeTask', task.id)">
-        Delete
-      </button>
+      <div class="button-container">
+        <button class="outline e-btn" v-on:click="emits('editTask', task.id)">
+          Edit
+        </button>
+        <button class="outline d-btn" v-on:click="emits('removeTask', task.id)">
+          Delete
+        </button>
+      </div>
     </article>
   </TransitionGroup>
 </template>
 
 <style scoped>
+.e-btn {
+  color: #12cf0f;
+  border-color: #12cf0f;
+}
+
+.e-btn:hover {
+  color: #71e26f;
+  border-color: #71e26f;
+}
+
+.d-btn {
+  color: #c90000;
+  border-color: #c90000;
+}
+
+.d-btn:hover {
+  color: #e66666;
+  border-color: #e66666;
+}
+
 .task-list {
   margin-top: 1rem;
 }

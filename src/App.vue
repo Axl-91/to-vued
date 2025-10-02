@@ -4,13 +4,15 @@ import TaskForm from "./components/TaskForm.vue";
 import type { Task, TaskFilter } from "./types";
 import TaskList from "./components/TaskList.vue";
 import FilterButton from "./components/FilterButton.vue";
+import EditTaskModal from "./components/EditTaskModal.vue";
 
 const message = ref("To Vued");
 const tasksList = ref<Task[]>([]);
 const filter = ref<TaskFilter>("all");
+const taskToEdit = ref<string | null>(null);
 
 const tasksCompleted = computed(
-  () => tasksList.value.filter((t) => t.done).length
+  () => tasksList.value.filter((t) => t.done).length,
 );
 
 const filteredTasks = computed(() => {
@@ -44,6 +46,19 @@ function removeTask(id: string) {
 function setFilter(newFilter: TaskFilter) {
   filter.value = newFilter;
 }
+
+function openEditTask(id: string) {
+  taskToEdit.value = id;
+}
+const closeEditTask = () => {
+  taskToEdit.value = null;
+};
+
+const updateTask = (id: string, newTitle: string) => {
+  const task = tasksList.value.find((t: Task) => t.id === id);
+  if (task) task.title = newTitle;
+  closeEditTask();
+};
 </script>
 
 <template>
@@ -75,8 +90,15 @@ function setFilter(newFilter: TaskFilter) {
       :tasks-list="filteredTasks"
       @toggle-done="toggleDone"
       @remove-task="removeTask"
+      @edit-task="openEditTask"
     />
   </main>
+  <EditTaskModal
+    v-if="taskToEdit"
+    :task="tasksList.find((t: Task) => t.id === taskToEdit)!"
+    @close="closeEditTask"
+    @save="updateTask"
+  />
 </template>
 
 <style>
